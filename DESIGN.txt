@@ -15,3 +15,4 @@ moveToFairy(): takes in Enity, WorldModel, Entity, and EventScheduler objects.
 getNumFromRange(): takes in and only uses constants so I left it in Functions as static.
 create methods: are just returning different entity objects so they should stay in Functions.
 nearestEntity(): takes in a List object of entities. Decided to leave it in Functions because most method calls using entities are built-in List methods.
+parse methods: takes in WorldModel and ImageStore objects as parameters, but also takes in an array object: String[] properties. This is the main object driving the function and creates properties within the function, so I left it static in Functions.
