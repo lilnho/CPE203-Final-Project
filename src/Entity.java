@@ -8,17 +8,38 @@ import processing.core.PImage;
  */
 public final class Entity
 {
-    public EntityKind kind;
-    public String id;
-    public Point position;
-    public List<PImage> images;
-    public int imageIndex;
-    public int resourceLimit;
-    public int resourceCount;
-    public int actionPeriod;
-    public int animationPeriod;
-    public int health;
-    public int healthLimit;
+    private EntityKind kind;
+    private String id;
+    private Point position;
+
+    public void setPosition(Point position) {
+        this.position = position;
+    }
+
+    private List<PImage> images;
+    private int imageIndex;
+    private int resourceLimit;
+    private int resourceCount;
+    private int actionPeriod;
+    private int animationPeriod;
+    private int health;
+    private int healthLimit;
+
+    public EntityKind getKind() {
+        return kind;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public int getHealth() {
+        return health;
+    }
 
     public Entity(
             EntityKind kind,
@@ -239,8 +260,8 @@ public final class Entity
 
     public static PImage getCurrentImage(Object entity) {
         if (entity instanceof Background) {
-            return ((Background)entity).images.get(
-                    ((Background)entity).imageIndex);
+            return ((Background) entity).getImages().get(
+                    ((Background) entity).getImageIndex());
         }
         else if (entity instanceof Entity) {
             return ((Entity)entity).images.get(((Entity)entity).imageIndex);

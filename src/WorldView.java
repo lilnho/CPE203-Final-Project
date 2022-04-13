@@ -5,11 +5,16 @@ import java.util.Optional;
 
 public final class WorldView
 {
-    public PApplet screen;
-    public WorldModel world;
-    public int tileWidth;
-    public int tileHeight;
-    public Viewport viewport;
+    private PApplet screen;
+    private WorldModel world;
+    private int tileWidth;
+    private int tileHeight;
+
+    public Viewport getViewport() {
+        return viewport;
+    }
+
+    private Viewport viewport;
 
     public WorldView(
             int numRows,
@@ -27,17 +32,17 @@ public final class WorldView
     }
 
     public void shiftView(int colDelta, int rowDelta) {
-        int newCol = Functions.clamp(this.viewport.col + colDelta, 0,
-                this.world.numCols - this.viewport.numCols);
-        int newRow = Functions.clamp(this.viewport.row + rowDelta, 0,
-                this.world.numRows - this.viewport.numRows);
+        int newCol = Functions.clamp(this.viewport.getCol() + colDelta, 0,
+                this.world.getNumCols() - this.viewport.getNumCols());
+        int newRow = Functions.clamp(this.viewport.getRow() + rowDelta, 0,
+                this.world.getNumRows() - this.viewport.getNumRows());
 
         this.viewport.shift(newCol, newRow);
     }
 
     public void drawBackground() {
-        for (int row = 0; row < this.viewport.numRows; row++) {
-            for (int col = 0; col < this.viewport.numCols; col++) {
+        for (int row = 0; row < this.viewport.getNumRows(); row++) {
+            for (int col = 0; col < this.viewport.getNumCols(); col++) {
                 Point worldPoint = this.viewport.viewportToWorld(col, row);
                 Optional<PImage> image =
                         this.world.getBackgroundImage(worldPoint);
@@ -50,8 +55,8 @@ public final class WorldView
     }
 
     public void drawEntities() {
-        for (Entity entity : this.world.entities) {
-            Point pos = entity.position;
+        for (Entity entity : this.world.getEntities()) {
+            Point pos = entity.getPosition();
 
             if (this.viewport.contains(pos)) {
                 Point viewPoint = this.viewport.worldToViewport(pos.x, pos.y);

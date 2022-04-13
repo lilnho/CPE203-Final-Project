@@ -7,9 +7,19 @@ import processing.core.PImage;
  */
 public final class Background
 {
-    public String id;
-    public List<PImage> images;
-    public int imageIndex;
+    private String id;
+
+    public List<PImage> getImages() {
+        return images;
+    }
+
+    private List<PImage> images;
+
+    public int getImageIndex() {
+        return imageIndex;
+    }
+
+    private int imageIndex;
 
     public Background(String id, List<PImage> images) {
         this.id = id;
