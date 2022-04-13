@@ -37,3 +37,6 @@ CPE 203
 
 --parse methods: takes in WorldModel and ImageStore objects as parameters, but also takes in an array object: String[] properties.
   This is the main object driving the function and creates properties within the function, so I left it static in Functions.
+
+--transform methods (sapling, plant, tree): uses variables and methods from Functions, but Entity object is driving the 
+  conditional statements.
