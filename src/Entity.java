@@ -51,7 +51,7 @@ public final class Entity
             EventScheduler scheduler)
     {
         this.health++;
-        if (!Functions.transformPlant(this, world, scheduler, imageStore))
+        if (!this.transformPlant(world, scheduler, imageStore))
         {
             scheduler.scheduleEvent(this,
                     Functions.createActivityAction(this, world, imageStore),
@@ -65,7 +65,7 @@ public final class Entity
             EventScheduler scheduler)
     {
 
-        if (!Functions.transformPlant(this, world, scheduler, imageStore)) {
+        if (!this.transformPlant(world, scheduler, imageStore)) {
 
             scheduler.scheduleEvent(this,
                     Functions.createActivityAction(this, world, imageStore),
@@ -382,5 +382,87 @@ public final class Entity
             }
             return false;
         }
+
+    }
+
+    public boolean transformPlant(
+            WorldModel world,
+            EventScheduler scheduler,
+            ImageStore imageStore)
+    {
+        if (this.kind == EntityKind.TREE)
+        {
+            return this.transformTree(world, scheduler, imageStore);
+        }
+        else if (this.kind == EntityKind.SAPLING)
+        {
+            return this.transformSapling(world, scheduler, imageStore);
+        }
+        else
+        {
+            throw new UnsupportedOperationException(
+                    String.format("transformPlant not supported for %s", this));
+        }
+    }
+
+    public boolean transformTree(
+            WorldModel world,
+            EventScheduler scheduler,
+            ImageStore imageStore)
+    {
+        if (this.health <= 0) {
+            Entity stump = Functions.createStump(this.id,
+                    this.position,
+                    imageStore.getImageList(Functions.STUMP_KEY));
+
+            world.removeEntity(this);
+            scheduler.unscheduleAllEvents(this);
+
+            world.addEntity(stump);
+            stump.scheduleActions(scheduler, world, imageStore);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean transformSapling(
+            WorldModel world,
+            EventScheduler scheduler,
+            ImageStore imageStore)
+    {
+        if (this.health <= 0) {
+            Entity stump = Functions.createStump(this.id,
+                    this.position,
+                    imageStore.getImageList(Functions.STUMP_KEY));
+
+            world.removeEntity(this);
+            scheduler.unscheduleAllEvents(this);
+
+            world.addEntity(stump);
+            stump.scheduleActions(scheduler, world, imageStore);
+
+            return true;
+        }
+        else if (this.health >= this.healthLimit)
+        {
+            Entity tree = Functions.createTree("tree_" + this.id,
+                    this.position,
+                    Functions.getNumFromRange(Functions.TREE_ACTION_MAX, Functions.TREE_ACTION_MIN),
+                    Functions.getNumFromRange(Functions.TREE_ANIMATION_MAX, Functions.TREE_ANIMATION_MIN),
+                    Functions.getNumFromRange(Functions.TREE_HEALTH_MAX, Functions.TREE_HEALTH_MIN),
+                    imageStore.getImageList(Functions.TREE_KEY));
+
+            world.removeEntity(this);
+            scheduler.unscheduleAllEvents(this);
+
+            world.addEntity(tree);
+            tree.scheduleActions(scheduler, world, imageStore);
+
+            return true;
+        }
+
+        return false;
     }
 }
