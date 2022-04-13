@@ -1,0 +1,17 @@
+getCurrentImage(): takes in Object entity but relies on Background and Entity. Stays static because of use of "instanceof".
+load(): should stay in Functions because mainly it functions around the Scanner in. 
+loadImages(): same as load(), but uses primarily ImageStore attributes so I put it in ImageStore.
+clamp(): only relies on int primitives. Does not belong in any classes.
+addEntity(): could be in Entity or WorldModel. Chose WorldModel because mainly revolves around those attributes.
+moveToNotFull(): takes in Entity, WorldModel, Entity, and EventScheduler objects as parameters. Chose Entity because the conditionals revolve around Entity objects.
+moveFull(): same as above. Affects entity dude after changing to full.
+executeDudeFullActivity(): same as moveToNotFull() conditionals. Affects entity dude moving after changing to full. Entity is driving the function.
+executeDudeNotFullActivity(): same as above.
+processLine(): does not call any attributes passed in the parameters except for String[] properties which is created in the function so I kept it static and in Functions. 
+processImageLine(): same as above.
+getImages(): similar reason to processLine() and processImageLine().
+setAlpha(): takes in int parameters and PImage img object imported in Functions. Mainly method calls from PImage so i left it in Functions as static.
+moveToFairy(): takes in Enity, WorldModel, Entity, and EventScheduler objects. 
+getNumFromRange(): takes in and only uses constants so I left it in Functions as static.
+create methods: are just returning different entity objects so they should stay in Functions.
+nearestEntity(): takes in a List object of entities. Decided to leave it in Functions because most method calls using entities are built-in List methods.
