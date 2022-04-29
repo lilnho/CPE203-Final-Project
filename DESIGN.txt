@@ -2,7 +2,7 @@ Nathan Ho
 Professor Mork
 CPE 203
 
---getCurrentImage(): takes in Object entity but relies on Background and Entity. Stays static because of use of "instanceof".
+--getCurrentImage(): takes in Object entity but relies on Background and Entity. Split it between background and entity.
 
 --load(): should stay in Functions because mainly it functions around the Scanner in.
 

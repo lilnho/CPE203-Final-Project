@@ -40,15 +40,15 @@ public final class WorldModel
         }
     }
 
-    public Optional<Entity> findNearest(Point pos, List<EntityKind> kinds)
+    public Optional<Entity> findNearest(Point pos, List<Class> kinds)
     {
         List<Entity> ofType = new LinkedList<>();
-        for (EntityKind kind: kinds)
+        for (Class kind: kinds)
         {
             for (Entity entity : this.entities) {
-                if (entity.getKind() == kind) {
+                if (entity.getClass() == kind) {
                     ofType.add(entity);
-                }
+                }      // Example: Stump.class for specific entities
             }
         }
 
@@ -131,7 +131,7 @@ public final class WorldModel
     public Optional<PImage> getBackgroundImage(Point pos)
     {
         if (this.withinBounds(pos)) {
-            return Optional.of(Entity.getCurrentImage(this.getBackgroundCell(pos)));
+            return Optional.of(getBackgroundCell(pos).getCurrentImage(this.getBackgroundCell(pos)));
         }
         else {
             return Optional.empty();
