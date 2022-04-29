@@ -84,12 +84,6 @@ public class Sapling implements EntityHealth, ActivityEntity, AnimationEntity
 
     }
 
-    public PImage getCurrentImage(Entity entity) {
-
-        return this.images.get(this.imageIndex);
-
-    }
-
     public int getAnimationPeriod() {
         return this.animationPeriod;
     }

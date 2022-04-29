@@ -7,11 +7,6 @@ public class Fairy implements ActivityEntity, AnimationEntity, MoveEntity
 {
     private String id;
     private Point position;
-
-    public void setPosition(Point position) {
-        this.position = position;
-    }
-
     private List<PImage> images;
     private int imageIndex;
     private int actionPeriod;
@@ -20,7 +15,9 @@ public class Fairy implements ActivityEntity, AnimationEntity, MoveEntity
     public String getId() {
         return id;
     }
-
+    public void setPosition(Point position) {
+        this.position = position;
+    }
     public Point getPosition() {
         return position;
     }
