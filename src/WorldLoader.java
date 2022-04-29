@@ -14,14 +14,14 @@ public class WorldLoader {
     private static final int BGND_COL = 2;
     private static final int BGND_ROW = 3;
 
-    private static final String OBSTACLE_KEY = "obstacle";
+    public static final String OBSTACLE_KEY = "obstacle";
     private static final int OBSTACLE_NUM_PROPERTIES = 5;
     private static final int OBSTACLE_ID = 1;
     private static final int OBSTACLE_COL = 2;
     private static final int OBSTACLE_ROW = 3;
     private static final int OBSTACLE_ANIMATION_PERIOD = 4;
 
-    private static final String DUDE_KEY = "dude";
+    public static final String DUDE_KEY = "dude";
     private static final int DUDE_NUM_PROPERTIES = 7;
     private static final int DUDE_ID = 1;
     private static final int DUDE_COL = 2;
@@ -30,13 +30,13 @@ public class WorldLoader {
     private static final int DUDE_ACTION_PERIOD = 5;
     private static final int DUDE_ANIMATION_PERIOD = 6;
 
-    private static final String HOUSE_KEY = "house";
+    public static final String HOUSE_KEY = "house";
     private static final int HOUSE_NUM_PROPERTIES = 4;
     private static final int HOUSE_ID = 1;
     private static final int HOUSE_COL = 2;
     private static final int HOUSE_ROW = 3;
 
-    private static final String FAIRY_KEY = "fairy";
+    public static final String FAIRY_KEY = "fairy";
     private static final int FAIRY_NUM_PROPERTIES = 6;
     private static final int FAIRY_ID = 1;
     private static final int FAIRY_COL = 2;

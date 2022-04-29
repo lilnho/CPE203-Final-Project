@@ -116,7 +116,7 @@ public class Sapling implements EntityHealth, ActivityEntity, AnimationEntity
         if (this.health <= 0) {
             Stump stump = Factory.createStump(this.id,
                     this.position,
-                    imageStore.getImageList(Functions.STUMP_KEY));
+                    imageStore.getImageList(WorldLoader.STUMP_KEY));
 
             world.removeEntity(this);
             scheduler.unscheduleAllEvents(this);
@@ -133,7 +133,7 @@ public class Sapling implements EntityHealth, ActivityEntity, AnimationEntity
                     Functions.getNumFromRange(Functions.TREE_ACTION_MAX, Functions.TREE_ACTION_MIN),
                     Functions.getNumFromRange(Functions.TREE_ANIMATION_MAX, Functions.TREE_ANIMATION_MIN),
                     Functions.getNumFromRange(Functions.TREE_HEALTH_MAX, Functions.TREE_HEALTH_MIN),
-                    imageStore.getImageList(Functions.TREE_KEY));
+                    imageStore.getImageList(WorldLoader.TREE_KEY));
 
             world.removeEntity(this);
             scheduler.unscheduleAllEvents(this);

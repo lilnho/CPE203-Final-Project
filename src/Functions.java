@@ -23,62 +23,6 @@ public final class Functions
     private static final List<String> PATH_KEYS = new ArrayList<>(Arrays.asList("bridge", "dirt", "dirt_horiz", "dirt_vert_left", "dirt_vert_right",
             "dirt_bot_left_corner", "dirt_bot_right_up", "dirt_vert_left_bot"));
 
-    public static final String SAPLING_KEY = "sapling";
-    private static final int SAPLING_HEALTH_LIMIT = 5;
-    private static final int SAPLING_ACTION_ANIMATION_PERIOD = 1000; // have to be in sync since grows and gains health at same time
-    private static final int SAPLING_NUM_PROPERTIES = 4;
-    private static final int SAPLING_ID = 1;
-    private static final int SAPLING_COL = 2;
-    private static final int SAPLING_ROW = 3;
-    private static final int SAPLING_HEALTH = 4;
-
-    public static final String BGND_KEY = "background";
-    private static final int BGND_NUM_PROPERTIES = 4;
-    private static final int BGND_ID = 1;
-    private static final int BGND_COL = 2;
-    private static final int BGND_ROW = 3;
-
-    private static final String OBSTACLE_KEY = "obstacle";
-    private static final int OBSTACLE_NUM_PROPERTIES = 5;
-    private static final int OBSTACLE_ID = 1;
-    private static final int OBSTACLE_COL = 2;
-    private static final int OBSTACLE_ROW = 3;
-    private static final int OBSTACLE_ANIMATION_PERIOD = 4;
-
-    private static final String DUDE_KEY = "dude";
-    private static final int DUDE_NUM_PROPERTIES = 7;
-    private static final int DUDE_ID = 1;
-    private static final int DUDE_COL = 2;
-    private static final int DUDE_ROW = 3;
-    private static final int DUDE_LIMIT = 4;
-    private static final int DUDE_ACTION_PERIOD = 5;
-    private static final int DUDE_ANIMATION_PERIOD = 6;
-
-    private static final String HOUSE_KEY = "house";
-    private static final int HOUSE_NUM_PROPERTIES = 4;
-    private static final int HOUSE_ID = 1;
-    private static final int HOUSE_COL = 2;
-    private static final int HOUSE_ROW = 3;
-
-    private static final String FAIRY_KEY = "fairy";
-    private static final int FAIRY_NUM_PROPERTIES = 6;
-    private static final int FAIRY_ID = 1;
-    private static final int FAIRY_COL = 2;
-    private static final int FAIRY_ROW = 3;
-    private static final int FAIRY_ANIMATION_PERIOD = 4;
-    private static final int FAIRY_ACTION_PERIOD = 5;
-
-    public static final String STUMP_KEY = "stump";
-
-    public static final String TREE_KEY = "tree";
-    private static final int TREE_NUM_PROPERTIES = 7;
-    private static final int TREE_ID = 1;
-    private static final int TREE_COL = 2;
-    private static final int TREE_ROW = 3;
-    private static final int TREE_ANIMATION_PERIOD = 4;
-    private static final int TREE_ACTION_PERIOD = 5;
-    private static final int TREE_HEALTH = 6;
-
     public static final int TREE_ANIMATION_MAX = 600;
     public static final int TREE_ANIMATION_MIN = 50;
     public static final int TREE_ACTION_MAX = 1400;
@@ -175,19 +119,19 @@ public final class Functions
         String[] properties = line.split("\\s");
         if (properties.length > 0) {
             switch (properties[PROPERTY_KEY]) {
-                case BGND_KEY:
+                case WorldLoader.BGND_KEY:
                     return WorldLoader.parseBackground(properties, world, imageStore);
-                case DUDE_KEY:
+                case WorldLoader.DUDE_KEY:
                     return WorldLoader.parseDude(properties, world, imageStore);
-                case OBSTACLE_KEY:
+                case WorldLoader.OBSTACLE_KEY:
                     return WorldLoader.parseObstacle(properties, world, imageStore);
-                case FAIRY_KEY:
+                case WorldLoader.FAIRY_KEY:
                     return WorldLoader.parseFairy(properties, world, imageStore);
-                case HOUSE_KEY:
+                case WorldLoader.HOUSE_KEY:
                     return WorldLoader.parseHouse(properties, world, imageStore);
-                case TREE_KEY:
+                case WorldLoader.TREE_KEY:
                     return WorldLoader.parseTree(properties, world, imageStore);
-                case SAPLING_KEY:
+                case WorldLoader.SAPLING_KEY:
                     return WorldLoader.parseSapling(properties, world, imageStore);
             }
         }
