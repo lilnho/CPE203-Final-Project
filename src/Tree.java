@@ -3,36 +3,8 @@ import java.util.*;
 import processing.core.PImage;
 
 
-public class Tree implements ActivityEntity, AnimationEntity, EntityHealth
+public class Tree extends EntityHealth
 {
-    private String id;
-    private Point position;
-    private List<PImage> images;
-    private int imageIndex;
-    private int actionPeriod;
-    private int animationPeriod;
-    private int health;
-    private int healthLimit;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setPosition(Point position) {
-        this.position = position;
-    }
-
-    public Point getPosition() {
-        return position;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
 
     public Tree(
             String id,
@@ -43,14 +15,7 @@ public class Tree implements ActivityEntity, AnimationEntity, EntityHealth
             int health,
             int healthLimit)
     {
-        this.id = id;
-        this.position = position;
-        this.images = images;
-        this.imageIndex = 0;
-        this.actionPeriod = actionPeriod;
-        this.animationPeriod = animationPeriod;
-        this.health = health;
-        this.healthLimit = healthLimit;
+        super(id, position, images, actionPeriod, animationPeriod, health, healthLimit);
     }
 
     public void executeActivity(
@@ -59,59 +24,23 @@ public class Tree implements ActivityEntity, AnimationEntity, EntityHealth
             EventScheduler scheduler)
     {
 
-        if (!this.transformPlant(world, scheduler, imageStore)) {
+        if (!this.transformTree(world, scheduler, imageStore)) {
 
             scheduler.scheduleEvent(this,
                     Factory.createActivityAction(this, world, imageStore),
-                    actionPeriod);
+                    getActionPeriod());
         }
     }
 
-    public void scheduleActions(
-            EventScheduler scheduler,
-            WorldModel world,
-            ImageStore imageStore)
-    {
-                scheduler.scheduleEvent(this,
-                        Factory.createActivityAction(this, world, imageStore),
-                        this.actionPeriod);
-                scheduler.scheduleEvent(this,
-                        Factory.createAnimationAction(this, 0),
-                        this.getAnimationPeriod());
-
-    }
-
-    public PImage getCurrentImage() {
-        return this.images.get(this.imageIndex);
-    }
-
-    public int getAnimationPeriod() {
-        return this.animationPeriod;
-    }
-
-    public void nextImage() {
-        this.imageIndex = (this.imageIndex + 1) % this.images.size();
-    }
-
-
-
-    public boolean transformPlant(
-            WorldModel world,
-            EventScheduler scheduler,
-            ImageStore imageStore)
-    {
-        return this.transformTree(world, scheduler, imageStore);
-
-    }
 
     public boolean transformTree(
             WorldModel world,
             EventScheduler scheduler,
             ImageStore imageStore)
     {
-        if (this.health <= 0) {
-            Stump stump = Factory.createStump(this.id,
-                    this.position,
+        if (this.getHealth() <= 0) {
+            Stump stump = Factory.createStump(this.getId(),
+                    this.getPosition(),
                     imageStore.getImageList(WorldLoader.STUMP_KEY));
 
             world.removeEntity(this);

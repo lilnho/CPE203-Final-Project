@@ -3,35 +3,8 @@ import java.util.*;
 import processing.core.PImage;
 
 
-public class DudeFull implements ActivityEntity, AnimationEntity, MoveEntity
+public class DudeFull extends Dude
 {
-    private String id;
-    private Point position;
-
-
-    public void setPosition(Point position) {
-        this.position = position;
-    }
-
-    private List<PImage> images;
-    private int imageIndex;
-    private int resourceLimit;
-    private int resourceCount;
-    private int actionPeriod;
-    private int animationPeriod;
-
-
-    public PImage getCurrentImage() {
-        return this.images.get(this.imageIndex);
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public Point getPosition() {
-        return position;
-    }
 
     public DudeFull(
             String id,
@@ -42,14 +15,8 @@ public class DudeFull implements ActivityEntity, AnimationEntity, MoveEntity
             int actionPeriod,
             int animationPeriod)
     {
-        this.id = id;
-        this.position = position;
-        this.images = images;
-        this.imageIndex = 0;
-        this.resourceLimit = resourceLimit;
-        this.resourceCount = resourceCount;
-        this.actionPeriod = actionPeriod;
-        this.animationPeriod = animationPeriod;
+        super(id, position, images, animationPeriod, actionPeriod, resourceLimit, resourceCount);
+
     }
 
 
@@ -57,11 +24,11 @@ public class DudeFull implements ActivityEntity, AnimationEntity, MoveEntity
             WorldModel world,
             EventScheduler scheduler,
             ImageStore imageStore) {
-        DudeNotFull miner = Factory.createDudeNotFull(id,
-                this.position, this.actionPeriod,
-                this.animationPeriod,
-                this.resourceLimit,
-                this.images);
+        DudeNotFull miner = Factory.createDudeNotFull(getId(),
+                this.getPosition(), this.getActionPeriod(),
+                this.getAnimationPeriod(),
+                this.getResourceLimit(),
+                this.getImages());
 
         world.removeEntity(this);
         scheduler.unscheduleAllEvents(this);
@@ -73,55 +40,34 @@ public class DudeFull implements ActivityEntity, AnimationEntity, MoveEntity
 
     public Point nextPosition(
             WorldModel world, Point destPos) {
-        int horiz = Integer.signum(destPos.x - this.position.x);
-        Point newPos = new Point(this.position.x + horiz, this.position.y);
+        int horiz = Integer.signum(destPos.x - this.getPosition().x);
+        Point newPos = new Point(this.getPosition().x + horiz, this.getPosition().y);
 
         if (horiz == 0 || world.isOccupied(newPos) && world.getOccupancyCell(newPos).getClass() != Stump.class) {
-            int vert = Integer.signum(destPos.y - this.position.y);
-            newPos = new Point(this.position.x, this.position.y + vert);
+            int vert = Integer.signum(destPos.y - this.getPosition().y);
+            newPos = new Point(this.getPosition().x, this.getPosition().y + vert);
 
             if (vert == 0 || world.isOccupied(newPos) && world.getOccupancyCell(newPos).getClass() != Stump.class) {
-                newPos = this.position;
+                newPos = this.getPosition();
             }
         }
 
         return newPos;
     }
 
-    public void scheduleActions(
-            EventScheduler scheduler,
-            WorldModel world,
-            ImageStore imageStore)
-    {
-        scheduler.scheduleEvent(this,
-                Factory.createActivityAction(this, world, imageStore),
-                this.actionPeriod);
-        scheduler.scheduleEvent(this,
-                Factory.createAnimationAction(this, 0),
-                this.getAnimationPeriod());
-
-    }
-
-    public int getAnimationPeriod() {
-        return this.animationPeriod;
-    }
-
-
-    public void nextImage() {
-        this.imageIndex = (this.imageIndex + 1) % this.images.size();
-    }
 
     //was moveToFull
     public boolean moveTo(
             WorldModel world,
             Entity target,
             EventScheduler scheduler) {
-        if (this.position.adjacent(target.getPosition())) {
+        if (this.getPosition().adjacent(target.getPosition())) {
             return true;
-        } else {
+        }
+        else {
             Point nextPos = this.nextPosition(world, target.getPosition());
 
-            if (!this.position.equals(nextPos)) {
+            if (!this.getPosition().equals(nextPos)) {
                 Optional<Entity> occupant = world.getOccupant(nextPos);
                 if (occupant.isPresent()) {
                     scheduler.unscheduleAllEvents(occupant.get());
@@ -136,9 +82,10 @@ public class DudeFull implements ActivityEntity, AnimationEntity, MoveEntity
     public void executeActivity(
             WorldModel world,
             ImageStore imageStore,
-            EventScheduler scheduler) {
+            EventScheduler scheduler)
+    {
         Optional<Entity> fullTarget =
-                world.findNearest(this.position, new ArrayList<>(Arrays.asList(House.class)));
+                world.findNearest(this.getPosition(), new ArrayList<>(Arrays.asList(House.class)));
 
         if (fullTarget.isPresent() && this.moveTo(world,
                 fullTarget.get(), scheduler)) {
@@ -146,7 +93,7 @@ public class DudeFull implements ActivityEntity, AnimationEntity, MoveEntity
         } else {
             scheduler.scheduleEvent(this,
                     Factory.createActivityAction(this, world, imageStore),
-                    this.actionPeriod);
+                    this.getActionPeriod());
         }
     }
 

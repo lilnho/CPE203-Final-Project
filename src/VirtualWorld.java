@@ -167,6 +167,10 @@ public final class VirtualWorld extends PApplet
             if (entity instanceof ActivityEntity) {
                 ((ActivityEntity)entity).scheduleActions(scheduler, world, imageStore);
             }
+
+            else if (entity instanceof AnimationEntity) {
+                ((AnimationEntity) entity).scheduleActions(scheduler, world, imageStore);
+            }
         }
     }
 

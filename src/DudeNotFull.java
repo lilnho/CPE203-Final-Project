@@ -3,31 +3,8 @@ import java.util.*;
 import processing.core.PImage;
 
 
-public class DudeNotFull implements ActivityEntity, AnimationEntity, MoveEntity
+public class DudeNotFull extends Dude
 {
-    private String id;
-    private Point position;
-    private List<PImage> images;
-    private int imageIndex;
-    private int resourceLimit;
-    private int resourceCount;
-    private int actionPeriod;
-    private int animationPeriod;
-
-
-    public String getId() {
-        return id;
-    }
-    public void setPosition(Point position) {
-        this.position = position;
-    }
-    public Point getPosition() {
-        return position;
-    }
-
-    public PImage getCurrentImage() {
-        return this.images.get(this.imageIndex);
-    }
 
     public DudeNotFull(
             String id,
@@ -38,14 +15,7 @@ public class DudeNotFull implements ActivityEntity, AnimationEntity, MoveEntity
             int actionPeriod,
             int animationPeriod)
     {
-        this.id = id;
-        this.position = position;
-        this.images = images;
-        this.imageIndex = 0;
-        this.resourceLimit = resourceLimit;
-        this.resourceCount = resourceCount;
-        this.actionPeriod = actionPeriod;
-        this.animationPeriod = animationPeriod;
+        super(id, position, images, animationPeriod, actionPeriod, resourceLimit, resourceCount);
     }
 
     public boolean transformNotFull(
@@ -53,12 +23,12 @@ public class DudeNotFull implements ActivityEntity, AnimationEntity, MoveEntity
             EventScheduler scheduler,
             ImageStore imageStore)
     {
-        if (this.resourceCount >= this.resourceLimit) {
-            DudeFull miner = Factory.createDudeFull(this.id,
-                    this.position, this.actionPeriod,
-                    this.animationPeriod,
-                    this.resourceLimit,
-                    this.images);
+        if (this.getResourceCount() >= this.getResourceLimit()) {
+            DudeFull miner = Factory.createDudeFull(this.getId(),
+                    this.getPosition(), this.getActionPeriod(),
+                    this.getAnimationPeriod(),
+                    this.getResourceLimit(),
+                    this.getImages());
 
             world.removeEntity(this);
             scheduler.unscheduleAllEvents(this);
@@ -72,44 +42,24 @@ public class DudeNotFull implements ActivityEntity, AnimationEntity, MoveEntity
         return false;
     }
 
-    public Point nextPosition(
-            WorldModel world, Point destPos)
-    {
-        int horiz = Integer.signum(destPos.x - this.position.x);
-        Point newPos = new Point(this.position.x + horiz, this.position.y);
 
-        if (horiz == 0 || world.isOccupied(newPos) && world.getOccupancyCell(newPos).getClass() != Stump.class) {
-            int vert = Integer.signum(destPos.y - this.position.y);
-            newPos = new Point(this.position.x, this.position.y + vert);
-
-            if (vert == 0 || world.isOccupied(newPos) &&  world.getOccupancyCell(newPos).getClass() != Stump.class) {
-                newPos = this.position;
-            }
-        }
-
-        return newPos;
-    }
-
-    public void scheduleActions(
-            EventScheduler scheduler,
+    public void executeActivity(
             WorldModel world,
-            ImageStore imageStore)
+            ImageStore imageStore,
+            EventScheduler scheduler)
     {
-                scheduler.scheduleEvent(this,
-                        Factory.createActivityAction(this, world, imageStore),
-                        this.actionPeriod);
-                scheduler.scheduleEvent(this,
-                        Factory.createAnimationAction(this, 0),
-                        this.getAnimationPeriod());
-    }
+        Optional<Entity> target =
+                world.findNearest(this.getPosition(), new ArrayList<>(Arrays.asList(Tree.class, Sapling.class)));
 
-
-    public int getAnimationPeriod() {
-                return this.animationPeriod;
-    }
-
-    public void nextImage() {
-        this.imageIndex = (this.imageIndex + 1) % this.images.size();
+        if (!target.isPresent() || !this.moveTo(world,
+                (EntityHealth) target.get(),
+                scheduler)
+                || !this.transformNotFull(world, scheduler, imageStore))
+        {
+            scheduler.scheduleEvent(this,
+                    Factory.createActivityAction(this, world, imageStore),
+                    this.getActionPeriod());
+        }
     }
 
     //was moveToNotFull
@@ -118,16 +68,18 @@ public class DudeNotFull implements ActivityEntity, AnimationEntity, MoveEntity
             Entity target,
             EventScheduler scheduler)
     {
-        if (this.position.adjacent(target.getPosition())) {
-            this.resourceCount += 1;
-            EntityHealth targetHealth = (EntityHealth) target;
-            targetHealth.setHealth(targetHealth.getHealth() - 1);
+        if (this.getPosition().adjacent(target.getPosition())) {
+            this.setResourceCount(this.getResourceCount() + 1);
+            if (target instanceof EntityHealth) {
+                EntityHealth targetHealth = (EntityHealth) target;
+                targetHealth.setHealth(targetHealth.getHealth() - 1);
+            }
             return true;
         }
         else {
             Point nextPos = this.nextPosition(world, target.getPosition());
 
-            if (!this.position.equals(nextPos)) {
+            if (!this.getPosition().equals(nextPos)) {
                 Optional<Entity> occupant = world.getOccupant(nextPos);
                 if (occupant.isPresent()) {
                     scheduler.unscheduleAllEvents(occupant.get());
@@ -139,24 +91,22 @@ public class DudeNotFull implements ActivityEntity, AnimationEntity, MoveEntity
         }
     }
 
-    public void executeActivity(
-            WorldModel world,
-            ImageStore imageStore,
-            EventScheduler scheduler)
+    public Point nextPosition(
+            WorldModel world, Point destPos)
     {
-        Optional<Entity> target =
-                world.findNearest(this.position, new ArrayList<>(Arrays.asList(Tree.class, Sapling.class)));
+        int horiz = Integer.signum(destPos.x - this.getPosition().x);
+        Point newPos = new Point(this.getPosition().x + horiz, this.getPosition().y);
 
-        if (!target.isPresent() || !this.moveTo(world,
-                (EntityHealth) target.get(),
-                scheduler)
-                || !this.transformNotFull(world, scheduler, imageStore))
-        {
-            scheduler.scheduleEvent(this,
-                    Factory.createActivityAction(this, world, imageStore),
-                    this.actionPeriod);
+        if (horiz == 0 || world.isOccupied(newPos) && world.getOccupancyCell(newPos).getClass() != Stump.class) {
+            int vert = Integer.signum(destPos.y - this.getPosition().y);
+            newPos = new Point(this.getPosition().x, this.getPosition().y + vert);
+
+            if (vert == 0 || world.isOccupied(newPos) &&  world.getOccupancyCell(newPos).getClass() != Stump.class) {
+                newPos = this.getPosition();
+            }
         }
-    }
 
+        return newPos;
+    }
 
 }

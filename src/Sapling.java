@@ -2,36 +2,8 @@ import java.util.*;
 
 import processing.core.PImage;
 
-public class Sapling implements EntityHealth, ActivityEntity, AnimationEntity
+public class Sapling extends EntityHealth
 {
-    private String id;
-    private Point position;
-    private List<PImage> images;
-    private int imageIndex;
-    private int actionPeriod;
-    private int animationPeriod;
-    private int health;
-    private int healthLimit;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setPosition(Point position) {
-        this.position = position;
-    }
-
-    public Point getPosition() {
-        return position;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    public int getHealth() {
-        return health;
-    }
 
     public Sapling(
             String id,
@@ -42,18 +14,12 @@ public class Sapling implements EntityHealth, ActivityEntity, AnimationEntity
             int health,
             int healthLimit)
     {
-        this.id = id;
-        this.position = position;
-        this.images = images;
-        this.imageIndex = 0;
-        this.actionPeriod = actionPeriod;
-        this.animationPeriod = animationPeriod;
-        this.health = health;
-        this.healthLimit = healthLimit;
+        super(id, position, images, actionPeriod, animationPeriod, health, healthLimit);
+
     }
 
     public PImage getCurrentImage() {
-        return this.images.get(this.imageIndex);
+        return this.getImages().get(this.getImageIndex());
     }
 
     public void executeActivity(
@@ -61,44 +27,13 @@ public class Sapling implements EntityHealth, ActivityEntity, AnimationEntity
             ImageStore imageStore,
             EventScheduler scheduler)
     {
-        this.health++;
-        if (!this.transformPlant(world, scheduler, imageStore))
+        this.setHealth(this.getHealth() + 1);
+        if (!this.transformSapling(world, scheduler, imageStore))
         {
             scheduler.scheduleEvent(this,
                     Factory.createActivityAction(this, world, imageStore),
-                    this.actionPeriod);
+                    this.getActionPeriod());
         }
-    }
-
-    public void scheduleActions(
-            EventScheduler scheduler,
-            WorldModel world,
-            ImageStore imageStore)
-    {
-                scheduler.scheduleEvent(this,
-                        Factory.createActivityAction(this, world, imageStore),
-                        this.actionPeriod);
-                scheduler.scheduleEvent(this,
-                        Factory.createAnimationAction(this, 0),
-                        this.getAnimationPeriod());
-
-    }
-
-    public int getAnimationPeriod() {
-        return this.animationPeriod;
-    }
-
-    public void nextImage() {
-        this.imageIndex = (this.imageIndex + 1) % this.images.size();
-    }
-
-
-    public boolean transformPlant(
-            WorldModel world,
-            EventScheduler scheduler,
-            ImageStore imageStore)
-    {
-        return this.transformSapling(world, scheduler, imageStore);
     }
 
 
@@ -107,9 +42,9 @@ public class Sapling implements EntityHealth, ActivityEntity, AnimationEntity
             EventScheduler scheduler,
             ImageStore imageStore)
     {
-        if (this.health <= 0) {
-            Stump stump = Factory.createStump(this.id,
-                    this.position,
+        if (this.getHealth() <= 0) {
+            Stump stump = Factory.createStump(this.getId(),
+                    this.getPosition(),
                     imageStore.getImageList(WorldLoader.STUMP_KEY));
 
             world.removeEntity(this);
@@ -120,10 +55,10 @@ public class Sapling implements EntityHealth, ActivityEntity, AnimationEntity
 
             return true;
         }
-        else if (this.health >= this.healthLimit)
+        else if (this.getHealth() >= this.getHealthLimit())
         {
-            Tree tree = Factory.createTree("tree_" + this.id,
-                    this.position,
+            Tree tree = Factory.createTree("tree_" + this.getId(),
+                    this.getPosition(),
                     Functions.getNumFromRange(Functions.TREE_ACTION_MAX, Functions.TREE_ACTION_MIN),
                     Functions.getNumFromRange(Functions.TREE_ANIMATION_MAX, Functions.TREE_ANIMATION_MIN),
                     Functions.getNumFromRange(Functions.TREE_HEALTH_MAX, Functions.TREE_HEALTH_MIN),
