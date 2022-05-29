@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.Predicate;
 
 import processing.core.PImage;
 
@@ -45,19 +46,31 @@ public class Fairy extends MoveEntity
     public Point nextPosition(
             WorldModel world, Point destPos)
     {
-        int horiz = Integer.signum(destPos.x - this.getPosition().x);
-        Point newPos = new Point(this.getPosition().x + horiz, this.getPosition().y);
 
-        if (horiz == 0 || world.isOccupied(newPos)) {
-            int vert = Integer.signum(destPos.y - this.getPosition().y);
-            newPos = new Point(this.getPosition().x, this.getPosition().y + vert);
+        PathingStrategy strategy = new AStarPathingStrategy();
+        Predicate<Point> canPassThrough = passThrough -> world.withinBounds(passThrough) && !world.isOccupied(passThrough);
+        List<Point> path = strategy.computePath(getPosition(), destPos, canPassThrough, Point::adjacent, PathingStrategy.CARDINAL_NEIGHBORS);
 
-            if (vert == 0 || world.isOccupied(newPos)) {
-                newPos = this.getPosition();
-            }
+        if (path.size() != 0) {
+            return path.get(0);
+        }
+        else{
+            return getPosition();
         }
 
-        return newPos;
+//        int horiz = Integer.signum(destPos.x - this.getPosition().x);
+//        Point newPos = new Point(this.getPosition().x + horiz, this.getPosition().y);
+//
+//        if (horiz == 0 || world.isOccupied(newPos)) {
+//            int vert = Integer.signum(destPos.y - this.getPosition().y);
+//            newPos = new Point(this.getPosition().x, this.getPosition().y + vert);
+//
+//            if (vert == 0 || world.isOccupied(newPos)) {
+//                newPos = this.getPosition();
+//            }
+//        }
+//
+//        return newPos;
     }
 
 
