@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Optional;
 
@@ -43,6 +45,10 @@ public final class VirtualWorld extends PApplet
     private EventScheduler scheduler;
 
     private long nextTime;
+
+    public ImageStore getImageStore() {
+        return imageStore;
+    }
 
     public void settings() {
         size(VIEW_WIDTH, VIEW_HEIGHT);
@@ -90,6 +96,42 @@ public final class VirtualWorld extends PApplet
             Entity entity = entityOptional.get();
             //System.out.println(entity.getId() + ": " + entity.getClass() + " : " + entity.getHealth());
             //System.out.println(entity.getClass());
+        }
+
+        Background pokeball = new Background("pokeball", imageStore.getImageList("pokeball"));
+        Pikachu pikachu = Factory.createPikachu("pikachu", pressed, imageStore.getImageList("pikachu"), 5, 1000);
+
+        if (!(world.isOccupied(pressed)))
+        {
+            //add pikachu entity where mouse is clicked
+            world.addEntity(pikachu);
+            pikachu.scheduleActions(scheduler, world, imageStore);
+
+            //set background as pokeballs in 3x3 square around Pikachu
+            world.setBackground(new Point(pressed.x + 1, pressed.y), pokeball);
+            world.setBackground(new Point(pressed.x - 1, pressed.y), pokeball);
+            world.setBackground(new Point(pressed.x, pressed.y + 1), pokeball);
+            world.setBackground(new Point(pressed.x, pressed.y - 1), pokeball);
+
+            world.setBackground(new Point(pressed.x + 1, pressed.y + 1), pokeball);
+            world.setBackground(new Point(pressed.x - 1, pressed.y + 1), pokeball);
+            world.setBackground(new Point(pressed.x + 1, pressed.y - 1), pokeball);
+            world.setBackground(new Point(pressed.x - 1, pressed.y - 1), pokeball);
+
+            //change nearest fairy to pokemon trainer
+            Optional<Entity> nearestFairy = world.findNearest(pressed, new ArrayList<>(Arrays.asList(Fairy.class)));
+            if (nearestFairy.isPresent())
+            {
+                Entity fairy = nearestFairy.get();
+                Trainer trainer = new Trainer("trainer", nearestFairy.get().getPosition(), imageStore.getImageList("trainer"), 1, 600);
+                world.removeEntity(fairy);
+                scheduler.unscheduleAllEvents(fairy);
+
+                world.addEntity(trainer);
+                trainer.scheduleActions(scheduler, world, imageStore);
+
+            }
+
         }
 
     }

@@ -139,11 +139,6 @@ public final class Functions
         return false;
     }
 
-
-
-
-
-
     public static int clamp(int value, int low, int high) {
         return Math.min(high, Math.max(value, low));
     }

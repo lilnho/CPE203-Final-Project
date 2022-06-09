@@ -55,6 +55,20 @@ public class WorldLoader {
     private static final int TREE_ACTION_PERIOD = 5;
     private static final int TREE_HEALTH = 6;
 
+    private static final String PIKA_KEY = "pikachu";
+    private static final int PIKA_NUM_PROPERTIES = 6;
+    private static final int PIKA_ID = 1;
+    private static final int PIKA_COL = 2;
+    private static final int PIKA_ROW = 3;
+    private static final int PIKA_ANIMATION_PERIOD = 4;
+    private static final int PIKA_ACTION_PERIOD = 5;
+
+    private static final String POKE_KEY = "pokeball";
+    private static final int POKE_NUM_PROPERTIES = 6;
+    private static final int POKE_ID = 1;
+    private static final int POKE_COL = 2;
+    private static final int POKE_ROW = 3;
+
 
     public static boolean parseBackground(
             String[] properties, WorldModel world, ImageStore imageStore)

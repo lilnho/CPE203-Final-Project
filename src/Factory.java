@@ -93,4 +93,22 @@ public class Factory {
         return new DudeFull(id, position, images, resourceLimit, 0,
                 actionPeriod, animationPeriod);
     }
+
+    public static Pikachu createPikachu(String id,
+                                        Point position,
+                                        List<PImage> images,
+                                        int actionPeriod,
+                                        int animationPeriod)
+    {
+        return new Pikachu(id, position, images, actionPeriod, animationPeriod);
+    }
+
+    public static FaintedDude createFainted(String id,
+                                            Point position,
+                                            List<PImage> images)
+    {
+        return new FaintedDude(id, position, images);
+    }
+
+
 }

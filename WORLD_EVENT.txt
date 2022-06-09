@@ -1,0 +1,4 @@
+1. The event is triggered by a mouse click.
+2. After the click, a 3x3 square of pokeballs will spawn around the area that was clicked. The nearest existing fairy from the click will transform into a Pokemon trainer.
+3. The fairy-turned-trainer will hunt existing Pikachus. When the trainer touches a Pikachu, it will catch it (Pikachu disappears).
+4. The new entity is Pikachu. Pikachu will hunt existing dudes and cause them to faint and spawn a fainted dude.

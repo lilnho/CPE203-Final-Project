@@ -53,7 +53,7 @@ public class DudeNotFull extends Dude
                 world.findNearest(this.getPosition(), new ArrayList<>(Arrays.asList(Tree.class, Sapling.class)));
 
         if (!target.isPresent() || !this.moveTo(world,
-                (EntityHealth) target.get(),
+                target.get(),
                 scheduler)
                 || !this.transformNotFull(world, scheduler, imageStore))
         {
